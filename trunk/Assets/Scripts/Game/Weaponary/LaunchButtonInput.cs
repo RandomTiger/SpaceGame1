@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 public class LaunchButtonInput : MonoBehaviour, ILaunchVector
 {
-	PlayerController mController;
+    public GenericPad mInput = GenericPad.RTrigger;
+    PlayerController mController;
 	
 	// Use this for initialization
 	void Start () 
@@ -13,7 +14,7 @@ public class LaunchButtonInput : MonoBehaviour, ILaunchVector
 
 	public Vector2 GetVec()
 	{
-        if(mController.m_Controller.GetDown(GenericPad.RTrigger))
+        if(mController.m_Controller.GetDown(mInput))
         {
             return transform.up;
         }

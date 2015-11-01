@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Health : MonoBehaviour {
+public class Health : MonoBehaviour
+{
 
 	public float mAmount = 100;
 
@@ -19,11 +20,10 @@ public class Health : MonoBehaviour {
 		}
 	}
 
-    void OnTriggerEnter2D(Collider2D other)
+    public float Damage(float amount)
     {
-        if (other.GetComponent<Payload>())
-        {
-            mAmount -= 20.0f;
-        }
+        mAmount -= amount;
+        // Return any unused damage
+        return -Mathf.Min(mAmount, 0.0f);
     }
 }
