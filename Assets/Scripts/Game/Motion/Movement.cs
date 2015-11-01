@@ -9,6 +9,7 @@ public class Movement : MonoBehaviour
     IMovementVector mMovementVector;
     IThrusterScalar mThruster;
     Rigidbody2D mRigidbody;
+    ParticleSystem mThrusterParticles;
 
     public float mPushForceFactor = 100.0f;
 
@@ -21,6 +22,22 @@ public class Movement : MonoBehaviour
 		mMovementVector = GetComponent<IMovementVector> ();
         mThruster = GetComponent<IThrusterScalar>();
 		mRigidbody = GetComponent<Rigidbody2D> ();
+
+        mThrusterParticles = GetComponentInChildren<ParticleSystem>();
+        if(mThrusterParticles != null)
+        {
+            mThrusterParticles.enableEmission = false;
+        }
+    }
+
+    void Update()
+    {
+        float thrust = mThruster.GetValue();
+        if(mThrusterParticles != null)
+        {
+            mThrusterParticles.enableEmission = thrust > 0.0f;
+            mThrusterParticles.Play();
+        }
     }
 
     // Update is called once per frame

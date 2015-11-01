@@ -8,7 +8,7 @@ public class Launcher : MonoBehaviour {
 
 	public GameObject mProjectile;
 	public float mCooldown = 0.0f;
-    float mLaunchForceFactor = 5000.0f;
+    public float mLaunchForceFactor = 5000.0f;
 
     public float mCounter; 
 		
