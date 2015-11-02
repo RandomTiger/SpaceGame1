@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Shield : MonoBehaviour
+public class Shield : MonoBehaviour, IDamageable
 {
     public float mMaxStrength = 100;
     public float mRechargeSpeed = 10;

@@ -10,7 +10,12 @@ public class ColliderQueryChild : MonoBehaviour
 		mRoot = root;
 	}
 
-	public List<Collider2D> GetColliderList()
+    public ColliderRoot GetRoot()
+    {
+        return mRoot;
+    }
+
+    public List<Collider2D> GetColliderList()
 	{
 		return mRoot.GetColliderList ();
 	}
