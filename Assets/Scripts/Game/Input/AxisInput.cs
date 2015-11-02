@@ -5,8 +5,8 @@ using System.Collections;
 public class AxisInput : MonoBehaviour {
 
 	public int inputDevice = 0;
-	public GenericPad axisX = GenericPad.AxisLeftX;
-	public GenericPad axisY = GenericPad.AxisLeftY;
+	public InputMap axisX = InputMap.AxisLeftX;
+	public InputMap axisY = InputMap.AxisLeftY;
 
     public float x;
 	public float y;

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(PlayerController))]
 public class ThrusterScalarInput : MonoBehaviour, IThrusterScalar
 {
-    public GenericPad mButton = GenericPad.LTrigger;
+    public InputMap mButton = InputMap.LTrigger;
     private PlayerController mPlayerController;
 
     void Start()

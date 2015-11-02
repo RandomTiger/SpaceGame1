@@ -25,7 +25,7 @@ public class CameraZoom : MonoBehaviour {
 
     void Update()
     {
-        bool reset = InputSystem.GetController(m_Controller.m_PlayerIndex).GetDown(GenericPad.RThumstickDown);
+        bool reset = InputSystem.GetController(m_Controller.m_PlayerIndex).IsPressed(InputMap.RThumstickDown);
         if (reset)
         {
             m_UnitInterval = CamSizeToUnit(m_DefaultSize);
@@ -36,7 +36,7 @@ public class CameraZoom : MonoBehaviour {
     // Update is called once per frame
     void FixedUpdate()
     {
-        float input = InputSystem.GetController(m_Controller.m_PlayerIndex).Get(GenericPad.AxisRightY);
+        float input = InputSystem.GetController(m_Controller.m_PlayerIndex).Get(InputMap.AxisRightY);
 
         m_UnitInterval += input * Time.fixedDeltaTime;
         m_UnitInterval = Mathf.Clamp(m_UnitInterval, 0.0f, 1.0f);

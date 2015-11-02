@@ -12,7 +12,7 @@ public class DebugShowControllerInput : MonoBehaviour
         {
             Controller controller = InputSystem.GetController(0);
 
-            foreach (GenericPad button in System.Enum.GetValues(typeof(GenericPad)))
+            foreach (InputMap button in System.Enum.GetValues(typeof(InputMap)))
             {
                 float val = controller.Get(button);
                 GUI.Label(new Rect(10, y, 200, 20), button.ToString() + " " + val);

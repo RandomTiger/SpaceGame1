@@ -4,15 +4,27 @@ using System.Collections.Generic;
 
 public class Payload : MonoBehaviour {
 
-    public float mHull = 15;
-    public float mShield = 10;
+    public enum Target
+    {
+        Shield,
+        Hull
+    }
 
-    public List<Shield> mHitShieldList;
-    public List<Health> mHitHullList;
+    [System.Serializable]
+    public struct Damage
+    {
+        public Target mTarget;
+        public float mAmount;
+    }
+
+    public Damage [] mDamageList = null;
+
+    private List<Shield> mHitShieldList = new List<Shield>();
+    private List<Hull> mHitHullList = new List<Hull>();
 
     // Use this for initialization
-    void Start() {
-
+    void Start()
+    {
     }
 
     // Update is called once per frame
@@ -23,25 +35,43 @@ public class Payload : MonoBehaviour {
 
     void FixedUpdate()
     {
-        // Dish out shield damage first
-        foreach(Shield shield in mHitShieldList)
+        bool bulletStillGoing = false;
+
+        for(int i = 0; i < mDamageList.Length; i++)
         {
-            mShield = shield.Damage(mShield);
+            Damage dam = mDamageList[i];
+
+            if (dam.mTarget == Target.Shield && dam.mAmount > 0)
+            {
+                // Dish out shield damage first
+                foreach (Shield shield in mHitShieldList)
+                {
+                    dam.mAmount = shield.Damage(dam.mAmount);
+                }
+            }
+            else if (dam.mTarget == Target.Hull && dam.mAmount > 0)
+            {
+                // Dish out hull damage onto the shields
+                foreach (Shield shield in mHitShieldList)
+                {
+                    dam.mAmount = shield.Damage(dam.mAmount);
+                }
+
+                // If there is any left deal out damage onto the hull
+                foreach (Hull hull in mHitHullList)
+                {
+                    dam.mAmount = hull.Damage(dam.mAmount);
+
+                    // We've hit hull, time to stop
+                    dam.mAmount = 0; 
+                    bulletStillGoing = false;
+                }
+            }
+
+            bulletStillGoing |= dam.mAmount > 0.1f;
         }
 
-        // Dish out hull damage onto the shields
-        foreach (Shield shield in mHitShieldList)
-        {
-            mHull = shield.Damage(mHull);
-        }
-
-        // If there is any left deal out damage onto the hull
-        foreach (Health hull in mHitHullList)
-        {
-            mHull = hull.Damage(mHull);
-        }
-
-        if ((mHull + mShield) < 0.1f)
+        if (bulletStillGoing == false)
         {
             DestroyObject(gameObject);
         }
@@ -49,22 +79,16 @@ public class Payload : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if(mShield > 0)
+        Shield shield = other.GetComponent<Shield>();
+        if (shield != null)
         {
-            Shield shield = other.GetComponent<Shield>();
-            if (shield != null)
-            {
-                mHitShieldList.Add(shield);
-            }
+            mHitShieldList.Add(shield);
         }
 
-        if (mHull > 0)
+        Hull hull = other.GetComponent<Hull>();
+        if (hull != null)
         {
-            Health hull = other.GetComponent<Health>();
-            if (hull != null)
-            {
-                mHitHullList.Add(hull);
-            }
+            mHitHullList.Add(hull);
         }
     }
 }
