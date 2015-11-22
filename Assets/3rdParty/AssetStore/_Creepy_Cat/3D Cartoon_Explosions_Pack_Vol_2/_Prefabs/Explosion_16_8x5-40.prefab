@@ -8,6 +8,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 478512}
+  - 114: {fileID: 11414974}
   m_Layer: 0
   m_Name: Explosion_16_8x5-40
   m_TagString: Untagged
@@ -118,6 +119,17 @@ Light:
   m_ShadowRadius: 0
   m_ShadowAngle: 0
   m_AreaSize: {x: 1, y: 1}
+--- !u!114 &11414974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 121918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28fe61b4f0dfdb944b370f6d8fae868a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!198 &19812266
 ParticleSystem:
   m_ObjectHideFlags: 1
@@ -351,7 +363,7 @@ ParticleSystem:
     enabled: 1
     m_Type: 0
     rate:
-      scalar: 1
+      scalar: 0
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -383,7 +395,7 @@ ParticleSystem:
         m_PreInfinity: 2
         m_PostInfinity: 2
       minMaxState: 0
-    cnt0: 2
+    cnt0: 1
     cnt1: 1
     cnt2: 1
     cnt3: 30
@@ -391,7 +403,7 @@ ParticleSystem:
     time1: 1
     time2: 2
     time3: 0
-    m_BurstCount: 0
+    m_BurstCount: 1
   SizeModule:
     enabled: 0
     curve:
@@ -582,7 +594,7 @@ ParticleSystem:
     tilesY: 5
     animationType: 0
     rowIndex: 0
-    cycles: 40
+    cycles: 1
     randomRow: 1
   VelocityModule:
     enabled: 0
@@ -1104,7 +1116,7 @@ ParticleSystemRenderer:
   m_GameObject: {fileID: 134160}
   m_Enabled: 1
   m_CastShadows: 1
-  m_ReceiveShadows: 1
+  m_ReceiveShadows: 0
   m_Materials:
   - {fileID: 2100000, guid: 48566ad31e79f4731a53790ed7c6a52c, type: 2}
   m_SubsetIndices: 
@@ -1114,7 +1126,9 @@ ParticleSystemRenderer:
   m_ProbeAnchor: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
+  m_MinimumChartSize: 4
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
@@ -1157,6 +1171,26 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: playOnAwake
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ReceiveShadows
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: UVModule.cycles
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: EmissionModule.rate.scalar
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: EmissionModule.m_BurstCount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: EmissionModule.cnt0
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []

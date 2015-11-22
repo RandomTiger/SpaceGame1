@@ -3,7 +3,6 @@ using System.Collections;
 
 public class Hull : MonoBehaviour, IDamageable
 {
-    public Object mParticlesDeath = null;
 	public float mHealth = 100;
 
 	// Use this for initialization
@@ -24,12 +23,6 @@ public class Hull : MonoBehaviour, IDamageable
     {
         float before = mHealth;
         mHealth -= amount;
-
-        if (before > 0 && mHealth <= 0 && mParticlesDeath != null)
-        {
-            GameObject particleSys = Instantiate(mParticlesDeath, transform.position, Quaternion.identity) as GameObject;
-            particleSys.GetComponent<ParticleSystem>().Play();
-        }
 
         // Return any unused damage
         return -Mathf.Min(mHealth, 0.0f);
