@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+// Allows Collider children to trace access root and cached collider list
 public class ColliderRoot : MonoBehaviour 
 {
-	List<Collider2D> colliderList = new List<Collider2D>();
+    List<Collider2D> colliderList = new List<Collider2D>();
 
 	void Awake()
 	{

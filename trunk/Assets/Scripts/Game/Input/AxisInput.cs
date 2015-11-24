@@ -1,15 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// Collect x and y from axis
 [RequireComponent(typeof(PlayerController))]
 public class AxisInput : MonoBehaviour {
 
-	public int inputDevice = 0;
-	public InputMap axisX = InputMap.AxisLeftX;
+    public int inputDeviceIndex = 0;
+    [Header("Axis")]
+    public InputMap axisX = InputMap.AxisLeftX;
 	public InputMap axisY = InputMap.AxisLeftY;
 
-    public float x;
-	public float y;
+    [Header("Output values")]
+    [Tooltip("Just for testing")]
+    [ShowOnly] public float x;
+    [Tooltip("Just for testing")]
+    [ShowOnly] public float y;
 
     private PlayerController m_Controller;
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 [RequireComponent(typeof(SteeringBehaviours))] // ok
 public class SteeringAI : MonoBehaviour 
 {
+#if false
     SteeringBehaviours m_SteeringBehaviours;
 
 	Vector2 mForce = new Vector2();
@@ -13,7 +14,7 @@ public class SteeringAI : MonoBehaviour
         m_SteeringBehaviours = GetComponent<SteeringBehaviours>();
     }
 
-	void Update()
+	void FixedUpdate()
 	{
         Vector3 actualSteer = m_SteeringBehaviours.GetActualSteer(GetDesiredSteer());
 
@@ -48,4 +49,5 @@ public class SteeringAI : MonoBehaviour
         //bool inFront = steer.IsTargetFront(m_Target);
         return m_SteeringBehaviours.Pursuit(target) + avoid;*/
 	}
+#endif
 }
