@@ -131,6 +131,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mParticlesDeath: {fileID: 121918, guid: e28415ac0b0114d18867f9b1e115d075, type: 2}
+  mSize: .25
 --- !u!114 &11485820
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -242,6 +243,10 @@ Prefab:
       propertyPath: mParticlesDeath
       value: 
       objectReference: {fileID: 121918, guid: e28415ac0b0114d18867f9b1e115d075, type: 2}
+    - target: {fileID: 0}
+      propertyPath: mSize
+      value: .25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 190744}

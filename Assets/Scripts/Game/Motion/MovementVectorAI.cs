@@ -9,9 +9,13 @@ public class MovementVectorAI : MonoBehaviour, IMovementVector
 	{
         if (mEnable == false)
         {
-            return new Vector2(0, 0);
+            return Vector2.zero;
         }
 
-		return new Vector2(Random.value * 2.0f - 1.0f, Random.value * 2.0f - 1.0f);
-	}
+        return GetDesiredSteerVelocity();
+    }
+    Vector3 GetDesiredSteerVelocity()
+    {
+        return GetComponent<SteeringBehaviours>().Wander();
+    }
 }

@@ -3,14 +3,16 @@ using System.Collections.Generic;
 
 public class LaunchVectorAI : MonoBehaviour, ILaunchVector 
 {
+    public bool mEnabled = true;
+
 	public Vector2 GetVec()
 	{
-        if (Random.value > 0.5)
+        if (mEnabled && Random.value > 0.5)
         {
             return transform.up;
         }
         
-        return new Vector2();
+        return Vector2.zero;
 	}
 }
 

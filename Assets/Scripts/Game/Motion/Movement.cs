@@ -16,6 +16,8 @@ public class Movement : MonoBehaviour
     public float mTorqueForceMult = 8;
     public float mTorqueForceMax = 20;
 
+    float threshold = 0.001f;
+
     // Use this for initialization
     void Start () 
 	{
@@ -55,8 +57,7 @@ public class Movement : MonoBehaviour
         float dstMag = dst.magnitude;
 
         // Deadzone for applying torque, dont apply if we dont really have direction
-        float threshold = 0.1f;
-        if(dstMag > threshold)
+        if (dst.sqrMagnitude > threshold)
         {
             float signedAngle = Maths2D.CalcSignedAngle(src, dst);
 
