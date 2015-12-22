@@ -6,45 +6,49 @@ using System.Collections.Generic;
 [RequireComponent (typeof (ColliderQueryChild))]
 public class Launcher : MonoBehaviour {
 
-	public GameObject mProjectile;
-	public float mCooldown = 0.0f;
-    public float mLaunchForceFactor = 5000.0f;
+    [SerializeField]
+    private GameObject m_Projectile;
+    [SerializeField]
+    private float m_Cooldown = 0.0f;
+    [SerializeField]
+    private float m_LaunchForceFactor = 5000.0f;
 
-    public float mCounter; 
+    [SerializeField]
+    private float m_Counter; 
 		
-	ILaunchVector mLaunchVector;
+	ILaunchVector m_LaunchVector;
 	
 	// Use this for initialization
 	void Start () 
 	{
-		mLaunchVector = GetComponent<ILaunchVector> ();
+		m_LaunchVector = GetComponent<ILaunchVector> ();
 	}
 	
 	// Fixed update ensures a regular burst of fire without varying gaps
 	void FixedUpdate () 
 	{
-		mCounter -= Time.fixedDeltaTime;
+		m_Counter -= Time.fixedDeltaTime;
 
-		Vector2 lanchDir = mLaunchVector.GetVec ();
+		Vector2 lanchDir = m_LaunchVector.GetVec ();
 		
 		float threshold = 0.2f;
 		if (Mathf.Abs (lanchDir.x) > threshold || Mathf.Abs (lanchDir.y) > threshold) 
 		{
-			if(mCounter <= 0.0f)
+			if(m_Counter <= 0.0f)
 			{
 				lanchDir.Normalize();
 				Fire (lanchDir);
-				mCounter = mCooldown;
+				m_Counter = m_Cooldown;
 			}
 		}
 	}
 
 	void Fire(Vector2 dir)
 	{
-		GameObject newProjectile = Instantiate(mProjectile, transform.position, Quaternion.identity) as GameObject;
+		GameObject newProjectile = Instantiate(m_Projectile, transform.position, Quaternion.identity) as GameObject;
 
 		// Apply force
-		Vector2 force = dir * mLaunchForceFactor;
+		Vector2 force = dir * m_LaunchForceFactor;
 
 		// Set colour (faction based only for now)
 		newProjectile.GetComponentInChildren<SpriteRenderer> ().color = GetComponent<Coloriser>().color;

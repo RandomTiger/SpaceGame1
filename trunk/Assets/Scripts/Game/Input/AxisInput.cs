@@ -26,7 +26,7 @@ public class AxisInput : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         
-        x = InputSystem.GetController(m_Controller.m_PlayerIndex).Get(axisX);
-		y = InputSystem.GetController(m_Controller.m_PlayerIndex).Get(axisY);
+        x = InputSystem.GetController(m_Controller.PlayerIndex).Get(axisX);
+		y = InputSystem.GetController(m_Controller.PlayerIndex).Get(axisY);
 	}
 }

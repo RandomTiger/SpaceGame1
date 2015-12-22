@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Faction : MonoBehaviour {
 
-	public int factionNum;
+    [SerializeField] private int factionNum;
 
 	Color [] factionColors = 
 	{

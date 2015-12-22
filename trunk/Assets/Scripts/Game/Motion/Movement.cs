@@ -11,10 +11,10 @@ public class Movement : MonoBehaviour
     Rigidbody2D mRigidbody;
     ParticleSystem mThrusterParticles;
 
-    public float mPushForceFactor = 100.0f;
+    [SerializeField]private float mPushForceFactor = 100.0f;
 
-    public float mTorqueForceMult = 8;
-    public float mTorqueForceMax = 20;
+    [SerializeField]private float mTorqueForceMult = 8;
+    [SerializeField]private float mTorqueForceMax = 20;
 
     float threshold = 0.001f;
 

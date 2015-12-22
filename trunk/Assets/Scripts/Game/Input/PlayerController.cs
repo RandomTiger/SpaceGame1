@@ -3,7 +3,9 @@ using System.Collections;
 
 public class PlayerController : MonoBehaviour {
 
-    public int m_PlayerIndex;
+    [SerializeField] private int m_PlayerIndex;
+    public int PlayerIndex { get { return m_PlayerIndex; } }
+
     public Controller m_Controller;
 
 	// Use this for initialization
