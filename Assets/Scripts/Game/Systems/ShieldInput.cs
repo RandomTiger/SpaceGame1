@@ -13,6 +13,6 @@ public class ShieldInput : MonoBehaviour, IShieldBool
 
     public bool GetRequest()
     {
-        return InputSystem.GetController(mPlayerController.m_PlayerIndex).IsJustReleased(mButton);
+        return InputSystem.GetController(mPlayerController.PlayerIndex).IsJustReleased(mButton);
     }
 }

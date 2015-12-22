@@ -3,9 +3,12 @@ using System.Collections;
 
 public class Shield : MonoBehaviour, IDamageable
 {
-    public float mMaxStrength = 100;
-    public float mRechargeSpeed = 10;
-    public float mPoppedShieldTimeout = 4.0f;
+    [SerializeField]
+    private float mMaxStrength = 100;
+    [SerializeField]
+    private float mRechargeSpeed = 10;
+    [SerializeField]
+    private float mPoppedShieldTimeout = 4.0f;
 
     private float mStrength;
     private float mTimeOut;

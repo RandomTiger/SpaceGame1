@@ -14,6 +14,6 @@ public class ThrusterScalarInput : MonoBehaviour, IThrusterScalar
 
     public float GetValue()
     {
-        return InputSystem.GetController(mPlayerController.m_PlayerIndex).Get(mButton);
+        return InputSystem.GetController(mPlayerController.PlayerIndex).Get(mButton);
     }
 }

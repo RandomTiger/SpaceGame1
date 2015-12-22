@@ -19,14 +19,30 @@ public class SteeringBehaviours : MonoBehaviour
     [Serializable]
     public class Attributes
     {
-        public float m_MinSpeed = 0;
+        [SerializeField]
+        private float m_MinSpeed = 0;
+        [SerializeField]
         public float m_MaxSpeed = 10;
+        [SerializeField]
         public float m_TurnRateDegrees = 30.0f;
+        [SerializeField]
         public float m_PursuitThresholdAngle = 18.0f;
 
+        [SerializeField]
         public float mWanderRadius = 1.0f;
+        [SerializeField]
         public float mWanderDistance = 1.0f;
+        [SerializeField]
         public float mWanderJitter = 0.1f;
+
+        public float MinSpeed { get { return m_MinSpeed; } }
+        public float MaxSpeed { get { return m_MaxSpeed; } }
+        public float TurnRateDegrees { get { return m_TurnRateDegrees; } }
+        public float PursuitThresholdAngle { get { return m_PursuitThresholdAngle; } }
+
+        public float WanderRadius { get { return mWanderRadius; } }
+        public float WanderDistance { get { return mWanderDistance; } }
+        public float WanderJitter { get { return mWanderJitter; } }
     }
 
     [SerializeField]
@@ -48,10 +64,10 @@ public class SteeringBehaviours : MonoBehaviour
     {
         float mag = desiredSteer.magnitude;
 
-        if (mag < mAttributes.m_MinSpeed)
+        if (mag < mAttributes.MinSpeed)
         {
             desiredSteer.Normalize();
-            desiredSteer *= mAttributes.m_MinSpeed;
+            desiredSteer *= mAttributes.MinSpeed;
         }
 
         if (mag > mAttributes.m_MaxSpeed)

@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Hull : MonoBehaviour, IDamageable
 {
-	public float mHealth = 100;
+    [SerializeField] private float mHealth = 100;
 
 	// Use this for initialization
 	void Start () {
