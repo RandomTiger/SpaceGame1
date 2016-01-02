@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 // todo: rewrite to output force?
+// todo: reconsile force max's with velocity max's 
 
 // velocity = force * time / mass
 // force = (velocity * mass / time)
@@ -17,68 +18,78 @@ public class SteeringBehaviours : MonoBehaviour
     };
 
     [Serializable]
-    public class Attributes
+    public class Forces
     {
         [SerializeField]
         private float m_MinSpeed = 0;
         [SerializeField]
-        public float m_MaxSpeed = 10;
+        private float m_MaxSpeed = 10;
         [SerializeField]
-        public float m_TurnRateDegrees = 30.0f;
+        private float m_TurnRateDegrees = 30.0f;
         [SerializeField]
-        public float m_PursuitThresholdAngle = 18.0f;
-
-        [SerializeField]
-        public float mWanderRadius = 1.0f;
-        [SerializeField]
-        public float mWanderDistance = 1.0f;
-        [SerializeField]
-        public float mWanderJitter = 0.1f;
+        private float m_PursuitThresholdAngle = 18.0f;
 
         public float MinSpeed { get { return m_MinSpeed; } }
         public float MaxSpeed { get { return m_MaxSpeed; } }
         public float TurnRateDegrees { get { return m_TurnRateDegrees; } }
         public float PursuitThresholdAngle { get { return m_PursuitThresholdAngle; } }
+    }
 
-        public float WanderRadius { get { return mWanderRadius; } }
-        public float WanderDistance { get { return mWanderDistance; } }
-        public float WanderJitter { get { return mWanderJitter; } }
+    [Serializable]
+    public class Wander
+    {
+        public float Radius { get { return m_Radius; } }
+        public float Distance { get { return m_Distance; } }
+        public float Jitter { get { return m_Jitter; } }
+        public Vector3 Target { get { return m_Target; } set { m_Target = value; } }
+
+        [SerializeField]
+        private float m_Radius = 1.0f;
+        [SerializeField]
+        private float m_Distance = 1.0f;
+        [SerializeField]
+        private float m_Jitter = 0.1f;
+        [SerializeField]
+        private Vector3 m_Target = new Vector3();
+
+    }
+
+    [Serializable]
+    public class Attributes
+    {
+        [SerializeField]
+        private Forces m_Forces = new Forces();
+        [SerializeField]
+        private Wander m_Wander = new Wander();
+
+        public Forces Forces { get { return m_Forces; } }
+        public Wander Wander { get { return m_Wander; } }
     }
 
     [SerializeField]
-    SteeringBehaviours.Attributes mAttributes;
+    public SteeringBehaviours.Attributes mAttributes;
 
-    Rigidbody2D m_Rigidbody;
-
-    void Awake()
-    {
-        m_Rigidbody = GetComponent<Rigidbody2D>();
-    }
-
-    public void Update()
-    {
-        //      Debug.DrawLine(transform.position, transform.position + GetComponent<Rigidbody2D>().velocity, Color.blue);
-    }
 
     public Vector3 GetActualSteer(Vector3 desiredSteer)
     {
+        Forces forces = mAttributes.Forces;
         float mag = desiredSteer.magnitude;
 
-        if (mag < mAttributes.MinSpeed)
+        if (mag < forces.MinSpeed)
         {
             desiredSteer.Normalize();
-            desiredSteer *= mAttributes.MinSpeed;
+            desiredSteer *= forces.MinSpeed;
         }
 
-        if (mag > mAttributes.m_MaxSpeed)
+        if (mag > forces.MaxSpeed)
         {
             desiredSteer.Normalize();
-            desiredSteer *= mAttributes.m_MaxSpeed;
+            desiredSteer *= forces.MaxSpeed;
         }
 
-        float maxRateRadians = Mathf.Deg2Rad * mAttributes.m_TurnRateDegrees * Time.deltaTime;
+        float maxRateRadians = Mathf.Deg2Rad * forces.TurnRateDegrees * Time.deltaTime;
 
-        Vector3 actualSteer = Vector3.RotateTowards(transform.forward, desiredSteer, maxRateRadians, mAttributes.m_MaxSpeed);
+        Vector3 actualSteer = Vector3.RotateTowards(transform.forward, desiredSteer, maxRateRadians, forces.MaxSpeed);
         //transform.rotation = Quaternion.LookRotation(actualSteer, transform.up);
 
         {
@@ -95,33 +106,106 @@ public class SteeringBehaviours : MonoBehaviour
         return actualSteer;
     }
 
-    public bool IsTargetFront(GameObject target)
+    public void OnDrawGizmos()
     {
-        Vector3 toTarget = target.transform.position - transform.position;
+        /*
+        if (m_Rigidbody == null)
+        {
+            return;
+        }
+    
+
+        Gizmos.color = Color.yellow;
+        Gizmos.matrix = transform.localToWorldMatrix;
+
+        Vector3 pos = new Vector3(0, 0, GetObstactleAvoidanceLookAheadDist() / 2);
+                                  Gizmos.DrawCube(pos, new Vector3(10, 10, GetObstactleAvoidanceLookAheadDist()));
+        Gizmos.matrix = Matrix4x4.identity;
+
+        Gizmos.color = Color.magenta;
+//        Vector3 avoid = ObstactleAvoidance();
+  //      Gizmos.DrawLine(transform.position, transform.position + avoid * 10.0f);*/
+    }
+
+}
+
+static class Steering
+{
+    public class SteeringActor
+    {
+        public SteeringActor(GameObject actor)
+        {
+            m_ActorObject = actor;
+            Debug.Assert(actor);
+
+            steeringBehaviours = actor.GetComponent<SteeringBehaviours>();
+            m_Rigidbody = actor.GetComponent<Rigidbody2D>();
+            m_Attributes = steeringBehaviours.mAttributes;
+
+            Debug.Assert(steeringBehaviours);
+            Debug.Assert(m_Rigidbody);
+            Debug.Assert(m_Attributes != null);
+        }
+
+        public SteeringBehaviours.Attributes GetAttributes()
+        {
+            return m_Attributes;
+        }
+
+        public Vector3 GetPosition()
+        {
+            return m_ActorObject.transform.position;
+        }
+
+        public Vector3 GetForward()
+        {
+            return m_ActorObject.transform.forward;
+        }
+
+        public Vector3 GetVelocity() // change to force???
+        {
+            return m_Rigidbody.velocity;
+        }
+
+        private GameObject m_ActorObject;
+        private SteeringBehaviours steeringBehaviours;
+        private Rigidbody2D m_Rigidbody;
+        private SteeringBehaviours.Attributes m_Attributes;
+    }
+
+    public static bool IsTargetFront(SteeringActor actor, SteeringActor target)
+    {
+        Vector3 toTarget = target.GetPosition() - actor.GetPosition();
         toTarget.Normalize();
-        return Vector3.Dot(transform.forward, toTarget) > 0;
+        return Vector3.Dot(actor.GetForward(), toTarget) > 0;
     }
 
     #region SteeringBehaviours
-    public Vector3 Seek(Vector3 targetPos)
+    public static Vector3 Seek(SteeringActor actor, Vector3 targetPos)
     {
-        Vector3 toTarget = (targetPos - transform.position);
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
+
+        Vector3 toTarget = (targetPos - actor.GetPosition());
         toTarget.Normalize();
-        Vector3 desiredVelocity = toTarget * mAttributes.m_MaxSpeed;
+        Vector3 desiredVelocity = toTarget * attributes.MaxSpeed;
         return desiredVelocity;// - GetVelocity();
     }
 
-    public Vector3 Flee(Vector3 targetPos)
+    public static Vector3 Flee(SteeringActor actor, Vector3 targetPos)
     {
-        Vector3 fromTarget = transform.position - targetPos;
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
+
+        Vector3 fromTarget = actor.GetPosition() - targetPos;
         fromTarget.Normalize();
-        Vector3 desiredVelocity = fromTarget * mAttributes.m_MaxSpeed;
+        Vector3 desiredVelocity = fromTarget * attributes.MaxSpeed;
         return desiredVelocity;// - GetVelocity();
     }
 
-    public Vector3 Arrive(Vector3 targetPos, Deceleration deceleration)
+    public static Vector3 Arrive(SteeringActor actor, Vector3 targetPos, SteeringBehaviours.Deceleration deceleration)
     {
-        Vector3 toTarget = targetPos - transform.position;
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
+
+        Vector3 toTarget = targetPos - actor.GetPosition();
 
         float dist = toTarget.magnitude;
         if (dist <= 0)
@@ -132,56 +216,52 @@ public class SteeringBehaviours : MonoBehaviour
         float decelerationTweaker = 0.3f;
         float speed = dist / ((float)deceleration * decelerationTweaker);
 
-        speed = Mathf.Min(speed, mAttributes.m_MaxSpeed);
+        speed = Mathf.Min(speed, attributes.MaxSpeed);
 
         Vector3 desiredVelocity = toTarget * speed / dist;
 
         return desiredVelocity;// - GetVelocity();
     }
 
-    public Vector3 Pursuit(GameObject evader)
+    public static Vector3 Pursuit(SteeringActor actor, SteeringActor evader)
     {
-        Rigidbody evaderRigidbody = evader.GetComponent<Rigidbody>();
-        if (evaderRigidbody == null)
-        {
-            return Seek(evader.transform.position);
-        }
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
+        Vector3 toEvader = evader.GetPosition() - actor.GetPosition();
 
-        Vector3 toEvader = evader.transform.position - transform.position;
-
-        Vector3 thisHeading = m_Rigidbody.velocity;
+        Vector3 thisHeading = actor.GetVelocity();
         thisHeading.Normalize();
 
-        Vector3 evaderHeading = evaderRigidbody.velocity;
+        Vector3 evaderHeading = evader.GetVelocity();
         evaderHeading.Normalize();
         float relativeHeading = Vector3.Dot(thisHeading, evaderHeading);
 
-        float tresholdAngleAcos = Mathf.Acos(mAttributes.m_PursuitThresholdAngle);
+        float tresholdAngleAcos = Mathf.Acos(attributes.PursuitThresholdAngle);
         if (Vector3.Dot(toEvader, thisHeading) > 0 && (relativeHeading < -tresholdAngleAcos))
         {
-            return Seek(evader.transform.position);
+            return Seek(actor, evader.GetPosition());
         }
 
         // the look ahead time is proportional to the distance between the evader
         // and the pursuer; and is inversely proportional to the sum of the agents velocities
-        float lookAheadTime = toEvader.magnitude / (mAttributes.m_MaxSpeed + evaderRigidbody.velocity.magnitude);
+        float lookAheadTime = toEvader.magnitude / (attributes.MaxSpeed + evader.GetVelocity().magnitude);
 
         // Now seek to the predicted future position of the evader
-        return Seek(evader.transform.position + evaderRigidbody.velocity * lookAheadTime);
+        return Seek(actor, evader.GetPosition() + (Vector3) evader.GetVelocity() * lookAheadTime);
     }
 
-    public Vector3 Evade(GameObject pursuer)
+    public static Vector3 Evade(SteeringActor actor, SteeringActor pursuer)
     {
-        Vector3 toPursuer = pursuer.transform.position - transform.position;
-        Rigidbody pursuerRigidbody = pursuer.GetComponent<Rigidbody>();
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
 
-        float lookAhreadTime = toPursuer.magnitude / (mAttributes.m_MaxSpeed + pursuerRigidbody.velocity.magnitude);
-        return Flee(pursuer.transform.position + pursuerRigidbody.velocity * lookAhreadTime);
+        Vector3 toPursuer = pursuer.GetPosition() - actor.GetPosition();
+
+        float lookAhreadTime = toPursuer.magnitude / (attributes.MaxSpeed + pursuer.GetVelocity().magnitude);
+        return Flee(actor, pursuer.GetPosition() + (Vector3)pursuer.GetVelocity() * lookAhreadTime);
     }
 
-    public float GetObstactleAvoidanceLookAheadDist()
+    public static float GetObstactleAvoidanceLookAheadDist(SteeringActor actor)
     {
-        return 1.0f + m_Rigidbody.velocity.magnitude * 2.0f;
+        return 1.0f + actor.GetVelocity().magnitude * 2.0f;
     }
     /*
     public Vector3 ObstactleAvoidance()
@@ -224,44 +304,26 @@ public class SteeringBehaviours : MonoBehaviour
         return result;
     }
 */
-    Vector2 mWanderTarget = new Vector3();
 
-    public Vector2 Wander()
+    public static Vector3 Wander(SteeringActor actor)
     {
-        mWanderTarget.x += RandomClamped() * mAttributes.mWanderJitter;
-        mWanderTarget.y += RandomClamped() * mAttributes.mWanderJitter;
-        mWanderTarget.Normalize();
+        SteeringBehaviours.Forces attributes = actor.GetAttributes().Forces;
+        SteeringBehaviours.Wander wander = actor.GetAttributes().Wander;
 
-        mWanderTarget *= mAttributes.mWanderRadius;
+        wander.Target = 
+            new Vector3(
+                wander.Target.x + RandomClamped() * wander.Jitter,
+                wander.Target.y + RandomClamped() * wander.Jitter);
+        wander.Target.Normalize();
 
-        return mAttributes.m_MaxSpeed * (mWanderTarget * mAttributes.mWanderDistance);
+        wander.Target *= wander.Radius;
+
+        return attributes.MaxSpeed * (wander.Target * wander.Distance);
     }
 
     #endregion
 
     #region Helper
-
-    public void OnDrawGizmos()
-    {
-        /*
-        if (m_Rigidbody == null)
-        {
-            return;
-        }
-    
-
-        Gizmos.color = Color.yellow;
-        Gizmos.matrix = transform.localToWorldMatrix;
-
-        Vector3 pos = new Vector3(0, 0, GetObstactleAvoidanceLookAheadDist() / 2);
-                                  Gizmos.DrawCube(pos, new Vector3(10, 10, GetObstactleAvoidanceLookAheadDist()));
-        Gizmos.matrix = Matrix4x4.identity;
-
-        Gizmos.color = Color.magenta;
-//        Vector3 avoid = ObstactleAvoidance();
-  //      Gizmos.DrawLine(transform.position, transform.position + avoid * 10.0f);*/
-    }
-
     private static float RandomClamped()
     {
         return UnityEngine.Random.Range(-1.0f, 1.0f);
