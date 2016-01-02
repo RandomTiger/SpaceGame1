@@ -1604,6 +1604,7 @@ GameObject:
   - 114: {fileID: 74774650}
   - 114: {fileID: 74774651}
   - 114: {fileID: 74774652}
+  - 114: {fileID: 74774653}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1769,6 +1770,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mButton: 6
+--- !u!114 &74774653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 74774640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c11cc45ec3546154b88c1870940322e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mAttributes:
+    m_MinSpeed: 0
+    m_MaxSpeed: 10
+    m_TurnRateDegrees: 30
+    m_PursuitThresholdAngle: 18
+    mWanderRadius: 1
+    mWanderDistance: 1
+    mWanderJitter: .100000001
+    mWanderTarget: {x: 0, y: 0, z: 0}
 --- !u!1 &79101031
 GameObject:
   m_ObjectHideFlags: 0
@@ -10752,7 +10773,7 @@ MonoBehaviour:
   ImportedFrom: 0
   ImportedFile: 
   ImportedCutoutColor: {r: 0, g: 0, b: 0, a: 0}
-  thisInstanceId: 18440
+  thisInstanceId: 18298
   Undone: 0
 --- !u!114 &567414919
 MonoBehaviour:
@@ -34449,7 +34470,7 @@ MonoBehaviour:
   ImportedFrom: 0
   ImportedFile: 
   ImportedCutoutColor: {r: 0, g: 0, b: 0, a: 0}
-  thisInstanceId: 21522
+  thisInstanceId: 21380
   Undone: 0
 --- !u!1 &1906982727
 GameObject:
@@ -36162,6 +36183,7 @@ GameObject:
   - 114: {fileID: 1970847141}
   - 114: {fileID: 1970847142}
   - 114: {fileID: 1970847143}
+  - 114: {fileID: 1970847144}
   m_Layer: 0
   m_Name: AI
   m_TagString: Untagged
@@ -36235,6 +36257,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mEnable: 1
+  m_Mode: 0
+  m_Target: {fileID: 74774640}
 --- !u!50 &1970847138
 Rigidbody2D:
   serializedVersion: 2
@@ -36319,6 +36343,19 @@ MonoBehaviour:
     mWanderRadius: 1
     mWanderDistance: 1
     mWanderJitter: .100000001
+    mWanderTarget: {x: 0, y: 0, z: 0}
+--- !u!114 &1970847144
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1970847132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf8c4f3bb8d01ab4480f4b99f3f161bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_TreeType: 0
 --- !u!1 &1982358876
 GameObject:
   m_ObjectHideFlags: 0
